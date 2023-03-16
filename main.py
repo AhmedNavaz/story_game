@@ -1,5 +1,3 @@
-from time import sleep
-
 import pygame
 import os
 from option import OptionButton
@@ -19,7 +17,7 @@ MAIN_MENU_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/bac
 # button
 start_button = Button(START_BT, (WIDTH / 2, HEIGHT / 2))
 
-parts = [script.part_1]
+parts = [script.part_1, script.part_2]
 
 current_part = 0
 current_scene = 0
@@ -71,7 +69,7 @@ def display_options(options, font):
         option.draw(window)
         # save the chosen option
         if option.is_clicked():
-            parts[current_part][current_scene]["chosen"] = i
+            parts[current_part][current_scene].chosen = i
             decide()
 
 
@@ -80,22 +78,26 @@ def decide():
     if len(parts[current_part]) - 1 == current_scene:
         if current_part < len(parts) - 1:
             current_part += 1
-            current_scene = 0
+            current_scene = -1
         else:
             run = False
-    else:
-        if current_part == 0:
-            if parts[current_part][current_scene]["chosen"] != -1:
-                if parts[current_part][current_scene]["chosen"] == 0:
-                    parts[current_part].extend(script.part_1_question_1_option_1)
-                else:
-                    parts[current_part].extend(script.part_1_question_1_option_2)
+    if current_part == 0:
+        if parts[current_part][current_scene].chosen != -1:
+            if parts[current_part][current_scene].chosen == 0:
+                parts[current_part].extend(script.part_1_question_1_option_1)
+            else:
+                parts[current_part].extend(script.part_1_question_1_option_2)
+            current_scene += 1
+        else:
+            if current_scene < len(parts[current_part]) - 1:
                 current_scene += 1
             else:
-                if current_scene < len(parts[current_part]) - 1:
-                    current_scene += 1
-                else:
-                    run = False
+                run = False
+    if current_part == 1:
+        if current_scene < len(parts[current_part]) - 1:
+            current_scene += 1
+        else:
+            run = False
 
 
 # main loop
@@ -111,16 +113,16 @@ def main():
 
         if started:
             # draw the background
-            window.blit(parts[current_part][current_scene]["background"], (0, 0))
+            window.blit(parts[current_part][current_scene].background, (0, 0))
 
             # draw a rectangle in the bottom section of the screen to display text
             pygame.draw.rect(window, (0, 0, 0, 128), (0, 600, 1280, 120), 0, 10)
 
             # display the parts[current_part] text in the bottom section of the screen in a specific width
-            display_footer(parts[current_part][current_scene]["text"], font)
+            display_footer(parts[current_part][current_scene].text, font)
 
             # display options
-            display_options(parts[current_part][current_scene]["options"], font)
+            display_options(parts[current_part][current_scene].options, font)
         else:
             # draw the background
             window.blit(MAIN_MENU_BG, (0, 0))
@@ -137,7 +139,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             # if the user clicks the mouse, go to the next scene
-            if event.type == pygame.MOUSEBUTTONDOWN and started and parts[current_part][current_scene]["options"] == []:
+            if event.type == pygame.MOUSEBUTTONDOWN and started and parts[current_part][current_scene].options == []:
                 decide()
             # if the user clicks the mouse, start the game
             if event.type == pygame.MOUSEBUTTONDOWN and not started:
