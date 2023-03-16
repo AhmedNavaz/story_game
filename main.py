@@ -2,7 +2,9 @@ from time import sleep
 
 import pygame
 import os
-from button import OptionButton
+from option import OptionButton
+from button import Button
+import script
 
 # create game window
 WIDTH, HEIGHT = 1280, 720
@@ -10,28 +12,22 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Story Game")
 pygame.font.init()
 
-# load images
-BACKGROUND1 = pygame.transform.scale(pygame.image.load(os.path.join("backgrounds", "battlefield.jpg")), (WIDTH, HEIGHT))
+# load assets
+START_BT = pygame.transform.scale(pygame.image.load(os.path.join("assets/images", "start.png")), (250, 250))
+MAIN_MENU_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "main_menu.png")), (WIDTH, HEIGHT))
 
-script = [
-    {
-        "text": "Germany has crossed into Poland with armed forces! They are quickly advancing into WARSAW!",
-        "options": []
-    },
-    {
-        "text": "France is on standby, waiting for the British' official call. We need your decision Commander!!",
-        "options": [
-            "Send troops to Poland , breaking out a war against Germany",
-            "Stay neutral, let Poland handle the situation",
-        ]
-    },
+# button
+start_button = Button(START_BT, (WIDTH / 2, HEIGHT / 2))
 
-]
+parts = [script.part_1]
 
+current_part = 0
+current_scene = 0
 OPTIONS = []
+run = True
 
 
-def display_footer(text, font, ):
+def display_footer(text, font):
     i = 0
     text_width, text_height = font.size(text)
     # if the text is too long, split it into multiple lines
@@ -57,6 +53,9 @@ def display_footer(text, font, ):
                     new_line += " " + word
         # display the last line
         window.blit(font.render(new_line, True, (255, 255, 255)), (40, 600 + 30 * i))
+    # if the text is not too long, display it
+    else:
+        window.blit(font.render(text, True, (255, 255, 255)), (40, 600 + 30 * i))
 
 
 # display options in the middle of the screen
@@ -70,43 +69,80 @@ def display_options(options, font):
         OPTIONS.append(option)
         # draw the option
         option.draw(window)
+        # save the chosen option
+        if option.is_clicked():
+            parts[current_part][current_scene]["chosen"] = i
+            decide()
+
+
+def decide():
+    global current_scene, run, current_part
+    if len(parts[current_part]) - 1 == current_scene:
+        if current_part < len(parts) - 1:
+            current_part += 1
+            current_scene = 0
+        else:
+            run = False
+    else:
+        if current_part == 0:
+            if parts[current_part][current_scene]["chosen"] != -1:
+                if parts[current_part][current_scene]["chosen"] == 0:
+                    parts[current_part].extend(script.part_1_question_1_option_1)
+                else:
+                    parts[current_part].extend(script.part_1_question_1_option_2)
+                current_scene += 1
+            else:
+                if current_scene < len(parts[current_part]) - 1:
+                    current_scene += 1
+                else:
+                    run = False
 
 
 # main loop
 def main():
     FPS = 60
     TIMER = pygame.time.get_ticks() / 1000
-    current_scene = 0
+    started = False
 
     # redraw/refresh the screen
     def refresh_display():
 
-        window.blit(BACKGROUND1, (0, 0))
-        # draw a rectangle in the bottom section of the screen to display text
-        pygame.draw.rect(window, (0, 0, 0, 128), (0, 600, 1280, 120), 0, 10)
-
-        # display text
         font = pygame.font.SysFont("comicsans", 30)
 
-        # display the script text in the bottom section of the screen in a specific width
-        display_footer(script[current_scene]["text"], font)
+        if started:
+            # draw the background
+            window.blit(parts[current_part][current_scene]["background"], (0, 0))
 
-        # display options
-        display_options(script[current_scene]["options"], font, )
+            # draw a rectangle in the bottom section of the screen to display text
+            pygame.draw.rect(window, (0, 0, 0, 128), (0, 600, 1280, 120), 0, 10)
+
+            # display the parts[current_part] text in the bottom section of the screen in a specific width
+            display_footer(parts[current_part][current_scene]["text"], font)
+
+            # display options
+            display_options(parts[current_part][current_scene]["options"], font)
+        else:
+            # draw the background
+            window.blit(MAIN_MENU_BG, (0, 0))
+            # draw the start button
+            start_button.update(window)
 
         pygame.display.update()
 
-    run = True
+    global run
     while run:
+        global current_scene
         TIMER = pygame.time.get_ticks() / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if current_scene < len(script) - 1:
-                    current_scene += 1
-                else:
-                    run = False
+            # if the user clicks the mouse, go to the next scene
+            if event.type == pygame.MOUSEBUTTONDOWN and started and parts[current_part][current_scene]["options"] == []:
+                decide()
+            # if the user clicks the mouse, start the game
+            if event.type == pygame.MOUSEBUTTONDOWN and not started:
+                if start_button.checkForInput(pygame.mouse.get_pos()):
+                    started = True
 
         refresh_display()
 
