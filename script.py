@@ -1,14 +1,14 @@
 import pygame
 import os
 
-WIDTH, HEIGHT = 1280, 720
+WIDTH, HEIGHT = 1920, 1080 # <-- change this to your screen resolution
 
 # load images
 BLACK_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "black.jpg")), (WIDTH, HEIGHT))
 COUNCIL_ROOM_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "council_room.jpg")),
                                          (WIDTH, HEIGHT))
-BATTLEFIELD_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "battlefield.jpg")),
-                                        (WIDTH, HEIGHT))
+BATTLEFIELD_1_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "battlefield.jpg")),
+                                          (WIDTH, HEIGHT))
 BATTLEFIELD_2_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "battlefield_2.jpg")),
                                           (WIDTH, HEIGHT))
 BATTLEFIELD_3_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "battlefield3.jpg")),
@@ -17,6 +17,10 @@ GERMAN_ROOM_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/b
                                         (WIDTH, HEIGHT))
 WARPLAN_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "warplan.jpg")),
                                     (WIDTH, HEIGHT))
+PRISON_1_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "prison_1.jpg")),
+                                     (WIDTH, HEIGHT))
+PRISON_2_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "prison_2.jpg")),
+                                     (WIDTH, HEIGHT))
 
 
 class Dialogue:
@@ -45,19 +49,19 @@ part_1_question_1_option_1 = [
     Dialogue("Soldiers have been dispatched to Poland , war ensues against German forces...", BATTLEFIELD_2_BG),
     Dialogue("Weeks pass by.. German forces overwhelm the Allies. Troops are retreating", BATTLEFIELD_2_BG),
     Dialogue("Chief! The battle is not looking good, we have to regroup and retaliate after further planning",
-             BATTLEFIELD_BG),
+             BATTLEFIELD_1_BG),
     Dialogue(
         'Taking casualties back home wont be easy. Will burn resources and time. But I need official orders "Sir!"',
-        BATTLEFIELD_BG, ["Carry casualties back to Britain, risk losing more lives",
-                         "Retreat immediately, leave injured behind"]),
+        BATTLEFIELD_1_BG, ["Carry casualties back to Britain, risk losing more lives",
+                           "Retreat immediately, leave injured behind"]),
 ]
 
 part_1_question_1_option_2 = [
-    Dialogue("British troops kept on standby , Poland is fighting German forces with France", BATTLEFIELD_BG),
-    Dialogue("Weeks pass by.. German forces overwhelm the Allies. Troops are retreating", BATTLEFIELD_BG),
+    Dialogue("British troops kept on standby , Poland is fighting German forces with France", BATTLEFIELD_1_BG),
+    Dialogue("Weeks pass by.. German forces overwhelm the Allies. Troops are retreating", BATTLEFIELD_1_BG),
     Dialogue("Helping casualties wont be easy. Will burn resources and time. But I need official orders SIR!",
-             BATTLEFIELD_BG, ["Carry casualties back to Britain, risk losing more lives",
-                              "Save resources , dont get involved"]),
+             BATTLEFIELD_1_BG, ["Carry casualties back to Britain, risk losing more lives",
+                                "Save resources , dont get involved"]),
 ]
 
 part_2 = [
@@ -73,7 +77,21 @@ part_2 = [
              "do Marshal!?", WARPLAN_BG, ["ATTACK FROM WEST", "INVADE BELGIUM"]),
     Dialogue("Just what I was thinking. Troops will be mobilized right away.", WARPLAN_BG),
     Dialogue("10th MAY , 1940...OPERATION FALL GELB"),
-    Dialogue("Germany has infiltrated BELGIUM. But Belgian defense is resilient.. German troops are slowed down!!",
-             BATTLEFIELD_3_BG, ["Deploy HEINKEL H11 AIR BOMBING FLEET (WILL CAUSE CIVILIAN DEATHS)",
-                                "Deploy PANZER IV TANKS UNIT (LOW CASUALTIES BUT MIGHT LOSE BATTLE)"]),
+    Dialogue("Germany troops are fighting and pushing into territory. But the defense is resilient.. German troops "
+             "are slowed down!!",
+             BATTLEFIELD_3_BG, ["Deploy HEINKEL H11 AIR BOMBING FLEET",
+                                "Deploy PANZER IV TANKS UNIT"]),
+    Dialogue("Okay Chief!", BATTLEFIELD_3_BG),
+    Dialogue("Few days pass by..."),
+    Dialogue("Chief! Our troops have overrun their defense. It is a VICTORY FOR GERMANY today!", GERMAN_ROOM_BG),
+    Dialogue("Also our soldiers have been able to capture some of the enemies alive , they might be of use for intel",
+             GERMAN_ROOM_BG),
+    Dialogue("We need you to look into it right away Chief!", GERMAN_ROOM_BG),
+    Dialogue("We have the Prisoners of war in our captivity. We have to interrogate them , at ANY COST.", PRISON_1_BG),
+    Dialogue("What Method do you want to apply?", PRISON_1_BG, ["Brutal Physical Torture", "Electric Shock",
+                                                                "Water Boarding", "Soft Interrogation"]),
+    Dialogue("I think that's all Chief.. He is of no more use to us. What do we do with him?", PRISON_1_BG,
+             ["Send to Auschwitz labour camp", "Send to Gas Chambers"]),
+    Dialogue("", PRISON_2_BG),
+
 ]
