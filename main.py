@@ -13,6 +13,7 @@ pygame.mixer.init(44100, -16, 2, 2048)
 
 # load assets
 START_BT = pygame.transform.scale(pygame.image.load(os.path.join("assets/images", "start.png")), (250, 250))
+QUIT_BT = pygame.transform.scale(pygame.image.load(os.path.join("assets/images", "quit.png")), (225, 90))
 MAIN_MENU_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "main_menu.png")),
                                       (WIDTH, HEIGHT))
 MAIN_MENU_MUSIC = pygame.mixer.Sound(os.path.join("assets/audios", "main_menu.mp3"))
@@ -22,6 +23,7 @@ GAMEPLAY_MUSIC.set_volume(0.5)
 
 # button
 start_button = Button(START_BT, (WIDTH / 2, HEIGHT / 2))
+quit_button = Button(QUIT_BT, (WIDTH - 112.5, 45))
 
 parts = [script.part_1, script.part_2]
 
@@ -119,6 +121,9 @@ def main():
             # draw the background
             window.blit(parts[current_part][current_scene].background, (0, 0))
 
+            # draw the quit button
+            quit_button.update(window)
+
             # draw a rectangle in the bottom section of the screen to display text
             pygame.draw.rect(window, (0, 0, 0, 128), (0, HEIGHT - 120, WIDTH, 120), 0, 10)
 
@@ -155,6 +160,9 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN and not started:
                 if start_button.checkForInput(pygame.mouse.get_pos()):
                     started = True
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if quit_button.checkForInput(pygame.mouse.get_pos()):
+                    run = False
 
         refresh_display()
 
