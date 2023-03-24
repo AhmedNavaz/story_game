@@ -1,3 +1,5 @@
+from time import sleep
+
 import pygame
 import os
 from option import OptionButton
@@ -5,7 +7,7 @@ from button import Button
 import script
 
 # create game window
-WIDTH, HEIGHT = 1920, 1080  # <-- change this to your screen resolution
+WIDTH, HEIGHT = 1280, 720  # <-- change this to your screen resolution
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Story Game")
 pygame.font.init()
@@ -29,8 +31,8 @@ parts = [script.part_1, script.part_2]
 
 current_part = 0
 current_scene = 0
-OPTIONS = []
 run = True
+answers = set()
 
 
 def display_footer(text, font):
@@ -66,7 +68,6 @@ def display_footer(text, font):
 
 # display options in the middle of the screen
 def display_options(options, font):
-    OPTIONS.clear()
     # loop through each option
     for i in range(len(options)):
         # create an option button
@@ -74,13 +75,12 @@ def display_options(options, font):
             option = OptionButton(options[i], 100 * i + 175 - 125, WIDTH, font, pygame, window)
         else:
             option = OptionButton(options[i], 100 * i + 175, WIDTH, font, pygame, window)
-        # add the option to the list of options
-        OPTIONS.append(option)
         # draw the option
         option.draw(window)
-        # save the chosen option
+        # if the option is clicked, set the chosen option to the current option
         if option.is_clicked():
-            parts[current_part][current_scene].chosen = i
+            answers.add(options[i])
+            decide()
 
 
 def decide():
@@ -154,7 +154,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             # if the user clicks the mouse, go to the next scene
-            if event.type == pygame.MOUSEBUTTONDOWN and started:
+            if event.type == pygame.MOUSEBUTTONDOWN and started and parts[current_part][current_scene].options == []:
                 decide()
             # if the user clicks the mouse, start the game
             if event.type == pygame.MOUSEBUTTONDOWN and not started:
@@ -162,6 +162,7 @@ def main():
                     started = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if quit_button.checkForInput(pygame.mouse.get_pos()):
+                    print(answers)
                     run = False
 
         refresh_display()
