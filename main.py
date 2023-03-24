@@ -7,7 +7,7 @@ from button import Button
 import script
 
 # create game window
-WIDTH, HEIGHT = 1280, 720  # <-- change this to your screen resolution
+WIDTH, HEIGHT = 1920, 1080  # <-- change this to your screen resolution
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Story Game")
 pygame.font.init()

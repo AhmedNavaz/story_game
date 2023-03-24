@@ -1,7 +1,7 @@
 import pygame
 import os
 
-WIDTH, HEIGHT = 1280, 720  # <-- change this to your screen resolution
+WIDTH, HEIGHT = 1920, 1080  # <-- change this to your screen resolution
 
 # load images
 BLACK_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/backgrounds", "black.jpg")), (WIDTH, HEIGHT))
