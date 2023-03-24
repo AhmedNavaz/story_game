@@ -79,6 +79,7 @@ def display_options(options, font):
         option.draw(window)
         # if the option is clicked, set the chosen option to the current option
         if option.is_clicked():
+            parts[current_part][current_scene].chosen = i
             answers.add(options[i])
             decide()
 
