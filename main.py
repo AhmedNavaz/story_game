@@ -1,3 +1,4 @@
+import time
 from time import sleep
 
 import pygame
@@ -48,7 +49,9 @@ user = User("", "", "")
 
 def play_audio(text):
     tts = gTTS(text=text, lang='en')
-    file_name = "assets/audios/speech/" + text + ".mp3"
+    # time to text
+    temp = time.time()
+    file_name = "assets/audios/speech/" + str(temp) + ".mp3"
     tts.save(file_name)
     pygame.mixer.music.load(file_name)
     pygame.mixer.music.play()
